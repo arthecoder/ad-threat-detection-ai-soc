@@ -43,7 +43,7 @@ All virtual machines operate on an isolated VMware Workstation Pro NAT network (
 * **`svc_backup` (AS-REP Roastable Account):** Domain account configured with `DoesNotRequirePreAuth = True` (`UF_DONT_REQUIRE_PREAUTH`).
 * **`jdoe` (Standard Domain User):** Baseline user account used to request TGS tickets and test password spraying.
 
-![Active Directory Target Setup](screenshots/01-dc01-ad-users.png)
+![Active Directory Target Setup](Screenshots/01-dc01-ad-users.png)
 
 ---
 
@@ -60,7 +60,7 @@ All virtual machines operate on an isolated VMware Workstation Pro NAT network (
 * **Kerberoasting (`svc_sql`):** Requested an RC4-encrypted TGS service ticket (`$krb5tgs$23$*svc_sql@CORP.LOCAL`) using a standard user account.
 * **SMB Password Spraying:** Tested common credentials across `Administrator`, `jdoe`, and `svc_sql`.
 
-![Kali Attack Execution](screenshots/02-kali-kerberos-attacks.png)
+![Kali Attack Execution](Screenshots/02-kali-kerberos-attacks.png)
 
 ### 2. Custom Wazuh Detection Engineering (`local_rules.xml`)
 By default, Windows Kerberos ticket events (`4768` and `4769`) log at informational severity (`Level 3`). Custom correlation rules were engineered in `/var/ossec/etc/rules/local_rules.xml` to detect RC4 downgrade requests (`0x17`) and elevate them to **Level 12** so they trigger automated AI SOC triage:
@@ -89,7 +89,7 @@ By default, Windows Kerberos ticket events (`4768` and `4769`) log at informatio
 </group>
 ```
 
-![Wazuh Security Events](screenshots/03-wazuh-alerts.png)
+![Wazuh Security Events](Screenshots/03-wazuh-alerts.png)
 
 ---
 
@@ -100,7 +100,7 @@ When Wazuh triggers a **Level 10+** alert (`Rule 100110`, `Rule 100111`, or `Rul
 2. **AI Analyst Triage (`Google Gemini`):** Evaluates the alert context, explains the attack vector, assesses severity, and recommends targeted identity or network remediation.
 3. **Human-in-the-Loop Governance (`Telegram`):** Dispatches the AI summary to Telegram and pauses execution (`Send message and wait for response`) so an analyst can approve or ignore active containment—preventing automated false-positive lockouts on internal infrastructure.
 
-![n8n Workflow Execution](screenshots/04-n8n-ai-soar-workflow.png)
+![n8n Workflow Execution](Screenshots/04-n8n-ai-soar-workflow.png)
 
 ---
 
